@@ -1,0 +1,33 @@
+{
+  "name": "bitbucket-payload-reader",
+  "version": "1.0.0",
+  "description": "bitbucket-payload-reader",
+  "keywords": [
+    "javascript",
+    "es6",
+    "esnext",
+    "software",
+    "npm"
+  ],
+  "main": "bitbucket-payload-reader.js",
+  "bin": {},
+  "scripts": {
+    "start": "node bitbucket-payload-reader.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jansanchez/bitbucket-payload-reader.git"
+  },
+  "author": {
+    "name": "jansanchez",
+    "email": "joejansanchez@gmail.com",
+    "url": "http://frontendlabs.io/author/jansanchez"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jansanchez/bitbucket-payload-reader/issues"
+  },
+  "homepage": "https://github.com/jansanchez/bitbucket-payload-reader#readme",
+  "dependencies": {
+  }
+}
