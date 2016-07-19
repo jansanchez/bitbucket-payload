@@ -41,7 +41,8 @@ npm-debug.log.*
 
 bower_components/
 
-
 .git/
 
 demo/
+build/
+
