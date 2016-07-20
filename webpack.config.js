@@ -8,7 +8,7 @@ module.exports = {
 	target: 'node',
   externals: [nodeExternals()],
   entry: {
-    "bitbucket-payload-reader": ['./bitbucket-payload-reader']
+    "index": ['./index']
   },
   output: {
     path: BUILD_PATH,

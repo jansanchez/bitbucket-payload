@@ -9,10 +9,10 @@
     "software",
     "npm"
   ],
-  "main": "bitbucket-payload-reader.js",
+  "main": "index.js",
   "bin": {},
   "scripts": {
-    "start": "pm2-dev run bitbucket-payload-reader.js",
+    "start": "pm2-dev run index.js",
     "es5": "webpack -w"
   },
   "repository": {
