@@ -12,8 +12,8 @@
   "main": "bitbucket-payload-reader.js",
   "bin": {},
   "scripts": {
-    "start": "babel-node ./bitbucket-payload-reader.js --presets es2015",
-    "production": "webpack -w"
+    "start": "pm2-dev run bitbucket-payload-reader.js",
+    "es5": "webpack -w"
   },
   "repository": {
     "type": "git",
@@ -36,6 +36,7 @@
     "babel-cli": "^6.10.1",
     "babel-loader": "^6.2.4",
     "babel-preset-es2015": "^6.9.0",
+    "pm2": "^1.1.3",
     "webpack": "^1.13.1",
     "webpack-node-externals": "^1.2.0"
   }

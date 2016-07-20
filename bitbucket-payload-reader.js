@@ -181,6 +181,8 @@ request(url, (error, response, body) => {
 
 const repository_events = ['push'];
 // if repository.event is push then
+console.log('\n');
+
 for (let change of data[repository_events[0]].changes) {
   //console.log(change.commits.length);
   if (change.commits.length > 0 && change.commits.length < 5) {
