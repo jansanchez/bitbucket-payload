@@ -496,21 +496,20 @@ request(url, (error, response, body) => {
 */
 
 const repository_events = ['push'];
+const commits = [];
 // if repository.event is push then
-console.log('__'.repeat(20));
 for (let change of data[repository_events[0]].changes) {
-  console.log("commits.length: " + change.commits.length);
-  if (change.truncated) {
-    console.log("Truncated: " + change.truncated);
-  }
-  console.log('__'.repeat(20));
-  if (change.commits.length > 0 && change.commits.length < 6) {
+  if (change.commits.length > 0) {
     for (let commit of change.commits) {
-      console.log(commit.date);
-      console.log(commit.message);
-      console.log('__'.repeat(20));
+      let object = {
+        date: commit.date,
+        message: commit.message
+      }
+      commits.push(object);
     }
-  }else{
-    console.log("- - - - cayó en el false!!!! de commits");
+    if (change.truncated) { // avisar al usuario que solo se procesaran los ultimos 5 commits
+      console.log("Truncated: " + change.truncated);
+    }
   }
 }
+console.log(commits);
