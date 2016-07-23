@@ -1,8 +1,8 @@
 'use strict';
 
-//import request from 'request';
-//const url = 'http://www.json-generator.com/api/json/get/bVXFCsEbDm?indent=2';
-//const url = 'http://www.json-generator.com/api/json/get/bUCzHEvUWG?indent=2';
+// import request from 'request';
+// const url = 'http://www.json-generator.com/api/json/get/bVXFCsEbDm?indent=2';
+// const url = 'http://www.json-generator.com/api/json/get/bUCzHEvUWG?indent=2';
 
 const data = {
   "push": {

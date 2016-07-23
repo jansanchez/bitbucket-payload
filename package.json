@@ -13,7 +13,8 @@
   "bin": {},
   "scripts": {
     "start": "pm2-dev run index.js",
-    "es5": "webpack -w"
+    "es5": "webpack -w",
+    "lint": "xo *.js"
   },
   "repository": {
     "type": "git",
@@ -38,6 +39,16 @@
     "babel-preset-es2015": "^6.9.0",
     "pm2": "^1.1.3",
     "webpack": "^1.13.1",
-    "webpack-node-externals": "^1.2.0"
+    "webpack-node-externals": "^1.2.0",
+    "xo": "^0.16.0"
+  },
+  "xo": {
+    "esnext": true,
+    "rules": {
+      "babel/new-cap": 0,
+      "no-undef": 0,
+      "indent": 0,
+      "no-unused-vars": 0
+    }
   }
 }
