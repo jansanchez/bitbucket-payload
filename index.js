@@ -4,7 +4,7 @@
 // const url = 'http://www.json-generator.com/api/json/get/bVXFCsEbDm?indent=2';
 // const url = 'http://www.json-generator.com/api/json/get/bUCzHEvUWG?indent=2';
 
-const data = {
+const payload = {
   "push": {
     "changes": [
       {
@@ -447,7 +447,10 @@ const data = {
   },
   "repository": {
     "scm": "git",
-    "website": "",
+    "type": "repository",
+    "is_private": true,
+    "name": "demo",
+    "full_name": "jansanchez27/demo",
     "uuid": "{a493855f-e9e4-4f6c-b395-941ee1f7ab45}",
     "links": {
       "self": {
@@ -460,7 +463,6 @@ const data = {
         "href": "https://bitbucket.org/jansanchez27/demo/avatar/32/"
       }
     },
-    "full_name": "jansanchez27/demo",
     "owner": {
       "username": "jansanchez27",
       "type": "user",
@@ -477,12 +479,10 @@ const data = {
           "href": "https://bitbucket.org/account/jansanchez27/avatar/32/"
         }
       }
-    },
-    "type": "repository",
-    "is_private": true,
-    "name": "demo"
+    }
   }
 };
+
 /*
 request(url, (error, response, body) => {
 	if (!error && response.statusCode == 200) {
@@ -495,21 +495,83 @@ request(url, (error, response, body) => {
 });
 */
 
-const repository_events = ['push'];
-const commits = [];
-// if repository.event is push then
-for (let change of data[repository_events[0]].changes) {
-  if (change.commits.length > 0) {
-    for (let commit of change.commits) {
-      let object = {
-        date: commit.date,
-        message: commit.message
+class BitbucketPayload {
+  constructor(payload, repositoryEvent) {
+    this.repositoryEvent = repositoryEvent || 'push';
+    this.content = payload; // ¿si no es enviado el payload?
+    this.commits = [];
+    this.actor = {};
+    this.repository = {};
+    this.truncated = false;
+    this.getChanges();
+    this.getCommits();
+    this.setActor();
+    this.setRepository();
+    return this;
+  }
+
+  getChanges() {
+    this.changes = this.content[this.repositoryEvent].changes; // si no hay changes?
+    return this.changes;
+  }
+
+  getEmailOfCommit(raw) {
+    const email = raw.substring(raw.indexOf('<') + 1, raw.lastIndexOf('>'));
+    return email;
+  }
+
+  addCommit(commit) {
+    this.commits.push({
+      date: commit.date,
+      hash: commit.hash,
+      message: commit.message,
+      author: {
+        username: commit.author.user.username,
+        displayName: commit.author.user.display_name,
+        email: this.getEmailOfCommit(commit.author.raw)
       }
-      commits.push(object);
+    });
+  }
+
+  getCommits() {
+    const change = this.changes[0];  // si es un solo valor
+    for (const commit of change.commits) {
+      this.addCommit(commit);
     }
     if (change.truncated) { // avisar al usuario que solo se procesaran los ultimos 5 commits
-      console.log("Truncated: " + change.truncated);
+      this.truncated = true;
     }
   }
+
+  setActor() {
+    this.actor.username = this.content.actor.username;
+    this.actor.type = this.content.actor.type;
+    this.actor.displayName = this.content.actor.display_name;
+  }
+
+  setRepository() {
+    this.repository.scm = this.content.repository.scm;
+    this.repository.type = this.content.repository.type;
+    this.repository.isPrivate = this.content.repository.is_private;
+    this.repository.name = this.content.repository.name;
+    this.repository.fullName = this.content.repository.full_name;
+  }
+
+  getPurged() {
+    return {
+      truncated: this.truncated,
+      commits: this.commits,
+      actor: this.actor,
+      repository: this.repository
+    };
+  }
+
 }
-console.log(commits);
+
+const bitbucketPayload = new BitbucketPayload(payload, 'push');
+const newPayload = bitbucketPayload.getPurged();
+
+console.log(newPayload.commits);
+
+// console.log(bitbucketPayload.getChanges());
+// console.log(bitbucketPayload.commits);
