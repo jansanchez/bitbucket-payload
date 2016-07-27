@@ -1,13 +1,17 @@
 {
-  "name": "bitbucket-payload-reader",
-  "version": "1.0.0",
-  "description": "bitbucket-payload-reader",
+  "name": "bitbucket-payload",
+  "version": "0.9.0",
+  "description": "bitbucket-payload",
   "keywords": [
     "javascript",
     "es6",
     "esnext",
     "software",
-    "npm"
+    "npm",
+    "bitbucket",
+    "payload",
+    "commits",
+    "webhook"
   ],
   "main": "index.js",
   "bin": {},
@@ -18,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jansanchez/bitbucket-payload-reader.git"
+    "url": "git+https://github.com/jansanchez/bitbucket-payload.git"
   },
   "author": {
     "name": "jansanchez",
@@ -27,12 +31,10 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jansanchez/bitbucket-payload-reader/issues"
+    "url": "https://github.com/jansanchez/bitbucket-payload/issues"
   },
-  "homepage": "https://github.com/jansanchez/bitbucket-payload-reader#readme",
-  "dependencies": {
-    "request": "^2.73.0"
-  },
+  "homepage": "https://github.com/jansanchez/bitbucket-payload#readme",
+  "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.10.1",
     "babel-loader": "^6.2.4",
