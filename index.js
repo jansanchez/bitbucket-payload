@@ -1,8 +1,86 @@
 'use strict';
 
-// import request from 'request';
-// const url = 'http://www.json-generator.com/api/json/get/bVXFCsEbDm?indent=2';
-// const url = 'http://www.json-generator.com/api/json/get/bUCzHEvUWG?indent=2';
+class BitbucketPayload {
+  constructor(payload, repositoryEvent) {
+    this.repositoryEvent = repositoryEvent || 'push';
+    this.commits = [];
+    this.actor = {};
+    this.repository = {};
+    this.truncated = false;
+    if (this.validatePayload(payload)) {
+      this.getChanges();
+      this.getCommits();
+      this.setActor();
+      this.setRepository();
+    }
+    return this;
+  }
+
+  validatePayload(payload) {
+    if (payload) {
+      this.content = payload;
+      return true;
+    }
+    const e = new Error('The payload is undefined.');
+    throw e;
+  }
+
+  getChanges() {
+    this.changes = this.content[this.repositoryEvent].changes; // if 'changes' don't have value?
+    return this.changes;
+  }
+
+  getEmailOfCommit(raw) {
+    const email = raw.substring(raw.indexOf('<') + 1, raw.lastIndexOf('>'));
+    return email;
+  }
+
+  addCommit(commit) {
+    this.commits.push({
+      date: commit.date,
+      hash: commit.hash,
+      message: commit.message,
+      author: {
+        username: commit.author.user.username,
+        displayName: commit.author.user.display_name,
+        email: this.getEmailOfCommit(commit.author.raw)
+      }
+    });
+  }
+
+  getCommits() {
+    const change = this.changes[0]; // only if it's a unique value
+    for (const commit of change.commits) {
+      this.addCommit(commit);
+    }
+    if (change.truncated) { // more than 5 commits
+      this.truncated = true;
+    }
+  }
+
+  setActor() {
+    this.actor.username = this.content.actor.username;
+    this.actor.type = this.content.actor.type;
+    this.actor.displayName = this.content.actor.display_name;
+  }
+
+  setRepository() {
+    this.repository.scm = this.content.repository.scm;
+    this.repository.type = this.content.repository.type;
+    this.repository.isPrivate = this.content.repository.is_private;
+    this.repository.name = this.content.repository.name;
+    this.repository.fullName = this.content.repository.full_name;
+  }
+
+  getPurged() {
+    return {
+      truncated: this.truncated,
+      commits: this.commits,
+      actor: this.actor,
+      repository: this.repository
+    };
+  }
+}
 
 const payload = {
   "push": {
@@ -483,95 +561,17 @@ const payload = {
   }
 };
 
-/*
-request(url, (error, response, body) => {
-	if (!error && response.statusCode == 200) {
 
-    console.log(body);
 
-	}else{
-		console.log(error);
-	}
-});
-*/
 
-class BitbucketPayload {
-  constructor(payload, repositoryEvent) {
-    this.repositoryEvent = repositoryEvent || 'push';
-    this.content = payload; // ¿si no es enviado el payload?
-    this.commits = [];
-    this.actor = {};
-    this.repository = {};
-    this.truncated = false;
-    this.getChanges();
-    this.getCommits();
-    this.setActor();
-    this.setRepository();
-    return this;
-  }
 
-  getChanges() {
-    this.changes = this.content[this.repositoryEvent].changes; // si no hay changes?
-    return this.changes;
-  }
-
-  getEmailOfCommit(raw) {
-    const email = raw.substring(raw.indexOf('<') + 1, raw.lastIndexOf('>'));
-    return email;
-  }
-
-  addCommit(commit) {
-    this.commits.push({
-      date: commit.date,
-      hash: commit.hash,
-      message: commit.message,
-      author: {
-        username: commit.author.user.username,
-        displayName: commit.author.user.display_name,
-        email: this.getEmailOfCommit(commit.author.raw)
-      }
-    });
-  }
-
-  getCommits() {
-    const change = this.changes[0];  // si es un solo valor
-    for (const commit of change.commits) {
-      this.addCommit(commit);
-    }
-    if (change.truncated) { // avisar al usuario que solo se procesaran los ultimos 5 commits
-      this.truncated = true;
-    }
-  }
-
-  setActor() {
-    this.actor.username = this.content.actor.username;
-    this.actor.type = this.content.actor.type;
-    this.actor.displayName = this.content.actor.display_name;
-  }
-
-  setRepository() {
-    this.repository.scm = this.content.repository.scm;
-    this.repository.type = this.content.repository.type;
-    this.repository.isPrivate = this.content.repository.is_private;
-    this.repository.name = this.content.repository.name;
-    this.repository.fullName = this.content.repository.full_name;
-  }
-
-  getPurged() {
-    return {
-      truncated: this.truncated,
-      commits: this.commits,
-      actor: this.actor,
-      repository: this.repository
-    };
-  }
-
-}
 
 const bitbucketPayload = new BitbucketPayload(payload, 'push');
+
 const newPayload = bitbucketPayload.getPurged();
 
-console.log(newPayload.commits);
+console.log(newPayload);
 
 // console.log(bitbucketPayload.getChanges());
+// console.log(newPayload.commits);
 // console.log(bitbucketPayload.commits);
