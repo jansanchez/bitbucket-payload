@@ -51,8 +51,8 @@ app.post('/', (request, response) => {
   const messages = [];
 
   for (const commit of payloadObject.commits) {
-    console.log(commit.author.username);
-    console.log(commit.author.email);
+    // console.log(commit.author.username);
+    // console.log(commit.author.email);
     messages.push(commit.message);
   }
 
@@ -78,15 +78,14 @@ app.post('/', (request, response) => {
        isPrivate: true,
        name: 'demo',
        fullName: 'jansanchez27/demo'
-     } 
+     }
   }
   */
 }
 ```
 
 ## License
-MIT © [Jan Sanchez]([author-url])
+MIT © [Jan Sanchez](https://frontendlabs.io/author/jansanchez)
 
 [npm-image]: http://img.shields.io/npm/v/bitbucket-payload.svg
 [npm-url]: https://www.npmjs.org/package/bitbucket-payload
-[author-url]: https://frontendlabs.io/author/jansanchez
